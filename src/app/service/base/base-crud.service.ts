@@ -40,22 +40,25 @@ export const BaseCrudServiceGenerate = <
     private async fetchFilteredAndPaginated(
       s: SEARCH & { page?: number; size?: number }
     ) {
+      const searchForMongo = await this.searchParams(s);
       const results = await this.m.aggregate([
         {
           $facet: {
-            total: [{ $count: 'total' }],
+            total: [{ $match: searchForMongo }, { $count: 'total' }],
             data: [
+              { $match: searchForMongo },
               { $skip: s.size * s.page },
               // lack of convert to int
               { $limit: parseInt(s.size as any as string) },
               { $sort: { _id: 1 } },
+              // @ts-ignore
             ],
           },
         },
       ]);
 
-      const maxItemLength = results[0].total[0].count;
-      const list = results[0].data;
+      const maxItemLength = results[0].total[0]?.count || 0;
+      const list = results[0]?.data || [];
       return { list, maxItemLength };
     }
 
