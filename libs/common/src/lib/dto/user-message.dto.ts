@@ -4,7 +4,7 @@ export interface IUserMessageDto {
   lastName?: string;
   email?: string;
   message?: string;
-  images?: string[];
+  fileUrls?: string[];
   type?: string;
   phoneNumber?: String;
   summary?: String;

@@ -17,7 +17,7 @@ export class UserMessageModel {
   @Prop()
   message?: String;
   @Prop({ type: [String] })
-  images?: String[];
+  fileUrls?: String[];
   @Prop()
   type?: String;
 }

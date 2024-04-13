@@ -18,7 +18,7 @@ export class UserMessageService extends BaseCrudServiceGenerate<
       firstName: m.firstName,
       lastName: m.lastName,
       type: m.type,
-      images: m.images,
+      fileUrls: m.fileUrls,
       _id: m._id,
     } as IUserMessageDto;
   }
@@ -30,7 +30,7 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     model.firstName = i.firstName;
     model.lastName = i.lastName;
     model.type = i.type;
-    model.images = i.images;
+    model.fileUrls = i.fileUrls;
     model._id = i._id;
     model.message = i.message;
     model.summary = i.summary;
