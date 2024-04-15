@@ -4,6 +4,7 @@ import { UserMessageModel } from '../model/user-message.model';
 import { IUserMessageDto } from 'libs/common/src/lib/dto';
 import { ControllerConfiguration } from './base/controller-configuration';
 import { UserMessageService } from '../service/user-message.service';
+import { MessagePattern } from '@nestjs/microservices';
 const config: ControllerConfiguration = {
   authorization: {
     ADD: { needsAuthenticated: false },
@@ -20,5 +21,12 @@ export class UserMessageController extends BaseCrudControllerGenerator<
 >(config) {
   constructor(userMsgService: UserMessageService) {
     super(userMsgService);
+  }
+
+  @MessagePattern('file-upload-USER_MESSAGE')
+  async insertQuestionMedia() {
+    const name = new Date().toISOString(),
+      category = 'USER_MESSAGE';
+    return { category, name };
   }
 }

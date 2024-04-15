@@ -8,4 +8,8 @@ export interface IUserMessageDto {
   type?: string;
   phoneNumber?: String;
   summary?: String;
+  creationDate?: Date;
+  status?: 'WAITING' | 'RESOLVED';
+  reply?: string;
+  relatedUrl?: string;
 }

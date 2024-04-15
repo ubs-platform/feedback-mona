@@ -19,6 +19,12 @@ export class UserMessageService extends BaseCrudServiceGenerate<
       lastName: m.lastName,
       type: m.type,
       fileUrls: m.fileUrls,
+      creationDate: m.creationDate,
+      relatedUrl: m.relatedUrl,
+      status: m.status,
+      phoneNumber: m.phoneNumber,
+      summary: m.summary,
+      reply: m.reply,
       _id: m._id,
     } as IUserMessageDto;
   }
@@ -33,7 +39,15 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     model.fileUrls = i.fileUrls;
     model._id = i._id;
     model.message = i.message;
+    model.phoneNumber = i.phoneNumber;
     model.summary = i.summary;
+    model.relatedUrl = i.relatedUrl;
+    if (model.creationDate == null) {
+      model.creationDate = new Date();
+    }
+    if (model.status == null) {
+      model.status = 'WAITING';
+    }
     return model;
   }
   searchParams(s?: IUserMessageDto): FilterQuery<UserMessageModel> {

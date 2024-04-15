@@ -20,5 +20,13 @@ export class UserMessageModel {
   fileUrls?: String[];
   @Prop()
   type?: String;
+  @Prop()
+  creationDate?: Date;
+  @Prop()
+  status?: 'WAITING' | 'RESOLVED';
+  @Prop()
+  reply?: String;
+  @Prop()
+  relatedUrl?: String;
 }
 export const UserMessageSchema = SchemaFactory.createForClass(UserMessageModel);
