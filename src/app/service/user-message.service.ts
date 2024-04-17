@@ -73,6 +73,12 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     if (s.type) {
       c.type = s.type;
     }
+    if (s.status) {
+      c.status = s.status;
+    }
+    if (s.creationDate) {
+      c.creationDate = s.creationDate;
+    }
     return c;
   }
 
