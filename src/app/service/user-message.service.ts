@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { BaseCrudServiceGenerate } from './base/base-crud.service';
 import { UserMessageModel } from '../model/user-message.model';
 import { IUserMessageDto } from '../../../libs/common/src/lib/dto';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class UserMessageService extends BaseCrudServiceGenerate<
@@ -11,6 +12,20 @@ export class UserMessageService extends BaseCrudServiceGenerate<
   IUserMessageDto,
   IUserMessageDto
 >(UserMessageModel.name) {
+  constructor(
+    @InjectModel(UserMessageModel.name) private _m: Model<UserMessageModel>
+  ) {
+    super(_m);
+  }
+
+  async resolve(id: string, reply: string): Promise<IUserMessageDto> {
+    const exist = await this._m.findById(id);
+    exist.reply = reply;
+    exist.status = 'RESOLVED';
+    await exist.save();
+    return await this.toOutput(exist);
+  }
+
   toOutput(m: UserMessageModel): IUserMessageDto | Promise<IUserMessageDto> {
     return {
       message: m.message,
@@ -23,7 +38,7 @@ export class UserMessageService extends BaseCrudServiceGenerate<
       relatedUrl: m.relatedUrl,
       status: m.status,
       phoneNumber: m.phoneNumber,
-      summary: m.summary,
+      summary: m.summary || 'WAITING',
       reply: m.reply,
       _id: m._id,
     } as IUserMessageDto;

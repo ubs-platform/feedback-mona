@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { BaseCrudControllerGenerator } from './base/base-crud.controller';
 import { UserMessageModel } from '../model/user-message.model';
 import { IUserMessageDto } from 'libs/common/src/lib/dto';
@@ -19,8 +19,16 @@ export class UserMessageController extends BaseCrudControllerGenerator<
   IUserMessageDto,
   IUserMessageDto
 >(config) {
-  constructor(userMsgService: UserMessageService) {
+  constructor(private userMsgService: UserMessageService) {
     super(userMsgService);
+  }
+
+  @Post(':id/resolve')
+  async resolve(
+    @Param() { id }: { id: string },
+    @Body() { reply }: { reply: string }
+  ): Promise<IUserMessageDto> {
+    return await this.userMsgService.resolve(id, reply);
   }
 
   @MessagePattern('file-upload-USER_MESSAGE')
