@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { FileMeta } from './filemeta';
 
 @Schema()
 export class UserMessageModel {
@@ -17,7 +18,7 @@ export class UserMessageModel {
   @Prop()
   message?: String;
   @Prop({ type: [String] })
-  fileUrls?: String[];
+  fileUrls?: FileMeta[];
   @Prop()
   type?: String;
   @Prop()

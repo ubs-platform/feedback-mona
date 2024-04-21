@@ -1,10 +1,12 @@
+import { IFileMetaDto } from './filemeta.dto';
+
 export interface IUserMessageDto {
   _id?: any;
   firstName?: string;
   lastName?: string;
   email?: string;
   message?: string;
-  fileUrls?: string[];
+  fileUrls?: IFileMetaDto[];
   type?: string;
   phoneNumber?: String;
   summary?: String;
