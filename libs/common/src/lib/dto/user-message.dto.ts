@@ -8,8 +8,8 @@ export interface IUserMessageDto {
   message?: string;
   fileUrls?: IFileMetaDto[];
   type?: string;
-  phoneNumber?: String;
-  summary?: String;
+  phoneNumber?: string;
+  summary?: string;
   creationDate?: Date;
   status?: 'WAITING' | 'RESOLVED';
   reply?: string;

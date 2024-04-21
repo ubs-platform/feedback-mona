@@ -37,12 +37,13 @@ export class UserMessageService extends BaseCrudServiceGenerate<
       relatedUrl: m.relatedUrl,
       status: m.status,
       phoneNumber: m.phoneNumber,
-      fileUrls: m.fileUrls.map((a) => {
-        return {
-          url: a.url,
-          title: a.url,
-        };
-      }),
+      fileUrls:
+        m.fileUrls?.map((a) => {
+          return {
+            url: a.url,
+            title: a.url,
+          };
+        }) || [],
       summary: m.summary || 'WAITING',
       reply: m.reply,
       _id: m._id,
@@ -62,12 +63,13 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     model.phoneNumber = i.phoneNumber;
     model.summary = i.summary;
     model.relatedUrl = i.relatedUrl;
-    model.fileUrls = i.fileUrls.map((a) => {
-      return {
-        url: a.url,
-        title: a.url,
-      };
-    });
+    model.fileUrls =
+      i.fileUrls?.map((a) => {
+        return {
+          url: a.url,
+          title: a.url,
+        };
+      }) || [];
     if (model.creationDate == null) {
       model.creationDate = new Date();
     }
@@ -108,7 +110,7 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     return c;
   }
 
-  private regexSearch(str: String): any {
+  private regexSearch(str: string): any {
     return { $regex: '.*' + str + '.*' };
   }
 }
