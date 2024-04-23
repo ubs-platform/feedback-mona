@@ -17,7 +17,7 @@ export class UserMessageModel {
   summary?: String;
   @Prop()
   message?: String;
-  @Prop({ type: [String] })
+  @Prop({ type: [FileMeta] })
   fileUrls?: FileMeta[];
   @Prop()
   type?: String;
