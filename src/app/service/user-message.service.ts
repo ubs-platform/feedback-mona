@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { BaseCrudServiceGenerate } from './base/base-crud.service';
 import { UserMessageModel } from '../model/user-message.model';
-import { IUserMessageDto } from '../../../libs/common/src/lib/dto';
+
 import { FilterQuery, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { IUserMessageDto, IUserMessageSearch } from 'libs/common/src/lib/dto';
 
 @Injectable()
 export class UserMessageService extends BaseCrudServiceGenerate<
   UserMessageModel,
   IUserMessageDto,
   IUserMessageDto,
-  IUserMessageDto
+  IUserMessageSearch
 >(UserMessageModel.name) {
   constructor(
     @InjectModel(UserMessageModel.name) private _m: Model<UserMessageModel>
@@ -78,7 +79,7 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     }
     return model;
   }
-  searchParams(s?: IUserMessageDto): FilterQuery<UserMessageModel> {
+  searchParams(s?: IUserMessageSearch): FilterQuery<UserMessageModel> {
     const c = {} as FilterQuery<UserMessageModel>;
     if (s._id) {
       c._id = s._id;
@@ -104,8 +105,11 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     if (s.status) {
       c.status = s.status;
     }
-    if (s.creationDate) {
-      c.creationDate = s.creationDate;
+    if (s.creationDateGte) {
+      c.creationDate = { $gte: s.creationDateGte };
+    }
+    if (s.creationDateLte) {
+      c.creationDate = { $lte: s.creationDateLte };
     }
     return c;
   }

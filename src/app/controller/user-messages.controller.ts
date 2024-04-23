@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { BaseCrudControllerGenerator } from './base/base-crud.controller';
 import { UserMessageModel } from '../model/user-message.model';
-import { IUserMessageDto } from 'libs/common/src/lib/dto';
+import { IUserMessageDto, IUserMessageSearch } from 'libs/common/src/lib/dto';
 import { ControllerConfiguration } from './base/controller-configuration';
 import { UserMessageService } from '../service/user-message.service';
 import { MessagePattern } from '@nestjs/microservices';
@@ -17,7 +17,7 @@ export class UserMessageController extends BaseCrudControllerGenerator<
   UserMessageModel,
   IUserMessageDto,
   IUserMessageDto,
-  IUserMessageDto
+  IUserMessageSearch
 >(config) {
   constructor(private userMsgService: UserMessageService) {
     super(userMsgService);
