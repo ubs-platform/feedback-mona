@@ -11,15 +11,39 @@ export class EmailService {
     private eventClient: ClientKafka
   ) {}
 
-  sendEmail(body: EmailDto) {
-    this.eventClient.emit('email-reset', body);
+  private async sendEmail(body: EmailDto) {
+    await this.eventClient.emit('email-reset', body);
   }
 
-  sentUserMessage(um: IUserMessageDto) {
-    // this.sendEmail({
-    //   language: 'en-us',
-    //   specialVariables: um,
-    //   to: um.email,
-    // });
+  async sentUserMessageResolvedMail(um: IUserMessageDto) {
+    await this.sendEmail({
+      language: 'en-us',
+      specialVariables: {
+        userfirstname: um.firstName,
+        userlastname: um.lastName,
+        summary: um.summary,
+        message: um.message,
+        reply: um.reply,
+        status: um.status,
+      },
+      subject: '{{global:ubs-user-message-resolved-short}}',
+      to: um.email,
+      templateName: 'ubs-user-message-resolved',
+    });
+  }
+
+  async sentUserMessage(um: IUserMessageDto) {
+    await this.sendEmail({
+      language: 'en-us',
+      specialVariables: {
+        userfirstname: um.firstName,
+        userlastname: um.lastName,
+        summary: um.summary,
+        message: um.message,
+      },
+      subject: '{{global:ubs-user-message-sent-short}}',
+      to: um.email,
+      templateName: 'ubs-user-message-sent',
+    });
   }
 }

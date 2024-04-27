@@ -12,10 +12,19 @@ import {
 } from './model/user-message.model';
 import { UserMessageService } from './service/user-message.service';
 import { UserMessageController } from './controller/user-messages.controller';
+import { EmailService } from './service/email.service';
+import { ClientsModule } from '@nestjs/microservices';
+import { getMicroserviceConnection } from '@ubs-platform/nest-microservice-setup-util';
 
 @Module({
   imports: [
     BackendJwtUtilsModule,
+    ClientsModule.register([
+      {
+        name: 'KAFKA_CLIENT',
+        ...getMicroserviceConnection(''),
+      } as any,
+    ]),
     MongooseModule.forRoot(
       `mongodb://${process.env.NX_MONGO_USERNAME}:${
         process.env.NX_MONGO_PASSWORD
@@ -29,6 +38,6 @@ import { UserMessageController } from './controller/user-messages.controller';
     ]),
   ],
   controllers: [AppController, UserMessageController],
-  providers: [AppService, UserMessageService],
+  providers: [AppService, UserMessageService, EmailService],
 })
 export class AppModule {}

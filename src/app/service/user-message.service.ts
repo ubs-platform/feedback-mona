@@ -5,6 +5,7 @@ import { UserMessageModel } from '../model/user-message.model';
 import { FilterQuery, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { IUserMessageDto, IUserMessageSearch } from 'libs/common/src/lib/dto';
+import { EmailService } from './email.service';
 
 @Injectable()
 export class UserMessageService extends BaseCrudServiceGenerate<
@@ -14,9 +15,14 @@ export class UserMessageService extends BaseCrudServiceGenerate<
   IUserMessageSearch
 >(UserMessageModel.name) {
   constructor(
-    @InjectModel(UserMessageModel.name) private _m: Model<UserMessageModel>
+    @InjectModel(UserMessageModel.name) private _m: Model<UserMessageModel>,
+    private emailService: EmailService
   ) {
     super(_m);
+  }
+
+  async afterCreate(i: IUserMessageDto): Promise<void> {
+    await this.emailService.sentUserMessage(i);
   }
 
   async resolve(id: string, reply: string): Promise<IUserMessageDto> {
@@ -24,7 +30,10 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     exist.reply = reply;
     exist.status = 'RESOLVED';
     await exist.save();
-    return await this.toOutput(exist);
+
+    const out = await this.toOutput(exist);
+    await this.emailService.sentUserMessageResolvedMail(out);
+    return out;
   }
 
   toOutput(m: UserMessageModel): IUserMessageDto | Promise<IUserMessageDto> {
