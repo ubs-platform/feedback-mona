@@ -6,6 +6,7 @@ import { IUserMessageDto } from 'libs/common/src/lib/dto';
 
 @Injectable()
 export class EmailService {
+  readonly DEFAULT_LANGUAGE = process.env.UNOTIFY_DEFAULT_LANGUAGE || 'en-us';
   constructor(
     @Inject('KAFKA_CLIENT')
     private eventClient: ClientKafka
@@ -17,7 +18,7 @@ export class EmailService {
 
   async sentUserMessageResolvedMail(um: IUserMessageDto) {
     await this.sendEmail({
-      language: 'en-us',
+      language: um.localeCode || this.DEFAULT_LANGUAGE,
       specialVariables: {
         userfirstname: um.firstName,
         userlastname: um.lastName,
@@ -34,7 +35,7 @@ export class EmailService {
 
   async sentUserMessage(um: IUserMessageDto) {
     await this.sendEmail({
-      language: 'en-us',
+      language: um.localeCode || this.DEFAULT_LANGUAGE,
       specialVariables: {
         userfirstname: um.firstName,
         userlastname: um.lastName,

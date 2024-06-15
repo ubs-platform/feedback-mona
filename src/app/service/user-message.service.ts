@@ -47,6 +47,7 @@ export class UserMessageService extends BaseCrudServiceGenerate<
       relatedUrl: m.relatedUrl,
       status: m.status,
       phoneNumber: m.phoneNumber,
+      localeCode: m.localeCode,
       fileUrls:
         m.fileUrls?.map((a) => {
           return {
@@ -72,6 +73,7 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     model.message = i.message;
     model.phoneNumber = i.phoneNumber;
     model.summary = i.summary;
+    model.localeCode = i.localeCode;
     model.relatedUrl = i.relatedUrl;
     model.fileUrls =
       i.fileUrls?.map((a) => {

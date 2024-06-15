@@ -14,4 +14,5 @@ export interface IUserMessageDto {
   status?: 'WAITING' | 'RESOLVED';
   reply?: string;
   relatedUrl?: string;
+  localeCode?: string;
 }

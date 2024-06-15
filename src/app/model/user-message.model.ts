@@ -29,5 +29,7 @@ export class UserMessageModel {
   reply?: String;
   @Prop()
   relatedUrl?: String;
+  @Prop()
+  localeCode?: String;
 }
 export const UserMessageSchema = SchemaFactory.createForClass(UserMessageModel);
