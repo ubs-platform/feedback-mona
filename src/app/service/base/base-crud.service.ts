@@ -37,6 +37,9 @@ export const BaseCrudServiceGenerate = <
     abstract moveIntoModel(model: MODEL, i: INPUT): Promise<MODEL> | MODEL;
     abstract searchParams(s?: SEARCH): FilterQuery<MODEL>;
 
+    async afterCreate(i: OUTPUT) {}
+    async afterEdited(out: Awaited<OUTPUT>) {}
+
     private async fetchFilteredAndPaginated(
       s: SEARCH & { page?: number; size?: number }
     ) {
@@ -101,15 +104,6 @@ export const BaseCrudServiceGenerate = <
       }
 
       const { list, maxItemLength } = await this.fetchFilteredAndPaginated(s);
-      // const maxItemLength = await this.m
-      //   .find(this.searchParams(s))
-      //   .count()
-      //   .exec();
-      // const list = await this.m
-      //   .find(this.searchParams(s))
-      //   .limit(s.size)
-      //   .skip(s.size * s.page)
-      //   .exec();
       return this.searchResult(list, s.page, s.size, maxItemLength);
     }
 
@@ -131,8 +125,9 @@ export const BaseCrudServiceGenerate = <
       )) as HydratedDocument<MODEL, {}, unknown>;
 
       await (newModel as HydratedDocument<MODEL, {}, unknown>).save();
-
-      return this.toOutput(newModel);
+      const out = await this.toOutput(newModel);
+      await this.afterCreate(out);
+      return out;
     }
 
     async edit(input: INPUT): Promise<OUTPUT> {
@@ -145,7 +140,9 @@ export const BaseCrudServiceGenerate = <
 
       await (newModel as HydratedDocument<MODEL, {}, unknown>).save();
 
-      return this.toOutput(newModel);
+      const out = await this.toOutput(newModel);
+      await this.afterEdited(out);
+      return out;
     }
 
     async remove(id: string | ObjectId): Promise<OUTPUT> {

@@ -17,7 +17,7 @@ export class UserMessageModel {
   summary?: String;
   @Prop()
   message?: String;
-  @Prop({ type: [String] })
+  @Prop({ type: [FileMeta] })
   fileUrls?: FileMeta[];
   @Prop()
   type?: String;
@@ -29,5 +29,7 @@ export class UserMessageModel {
   reply?: String;
   @Prop()
   relatedUrl?: String;
+  @Prop()
+  localeCode?: String;
 }
 export const UserMessageSchema = SchemaFactory.createForClass(UserMessageModel);

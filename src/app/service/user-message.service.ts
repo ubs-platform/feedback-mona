@@ -1,21 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { BaseCrudServiceGenerate } from './base/base-crud.service';
 import { UserMessageModel } from '../model/user-message.model';
-import { IUserMessageDto } from '../../../libs/common/src/lib/dto';
+
 import { FilterQuery, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { IUserMessageDto, IUserMessageSearch } from 'libs/common/src/lib/dto';
+import { EmailService } from './email.service';
 
 @Injectable()
 export class UserMessageService extends BaseCrudServiceGenerate<
   UserMessageModel,
   IUserMessageDto,
   IUserMessageDto,
-  IUserMessageDto
+  IUserMessageSearch
 >(UserMessageModel.name) {
   constructor(
-    @InjectModel(UserMessageModel.name) private _m: Model<UserMessageModel>
+    @InjectModel(UserMessageModel.name) private _m: Model<UserMessageModel>,
+    private emailService: EmailService
   ) {
     super(_m);
+  }
+
+  async afterCreate(i: IUserMessageDto): Promise<void> {
+    await this.emailService.sentUserMessage(i);
   }
 
   async resolve(id: string, reply: string): Promise<IUserMessageDto> {
@@ -23,7 +30,10 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     exist.reply = reply;
     exist.status = 'RESOLVED';
     await exist.save();
-    return await this.toOutput(exist);
+
+    const out = await this.toOutput(exist);
+    await this.emailService.sentUserMessageResolvedMail(out);
+    return out;
   }
 
   toOutput(m: UserMessageModel): IUserMessageDto | Promise<IUserMessageDto> {
@@ -37,6 +47,7 @@ export class UserMessageService extends BaseCrudServiceGenerate<
       relatedUrl: m.relatedUrl,
       status: m.status,
       phoneNumber: m.phoneNumber,
+      localeCode: m.localeCode,
       fileUrls:
         m.fileUrls?.map((a) => {
           return {
@@ -62,6 +73,7 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     model.message = i.message;
     model.phoneNumber = i.phoneNumber;
     model.summary = i.summary;
+    model.localeCode = i.localeCode;
     model.relatedUrl = i.relatedUrl;
     model.fileUrls =
       i.fileUrls?.map((a) => {
@@ -78,7 +90,7 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     }
     return model;
   }
-  searchParams(s?: IUserMessageDto): FilterQuery<UserMessageModel> {
+  searchParams(s?: IUserMessageSearch): FilterQuery<UserMessageModel> {
     const c = {} as FilterQuery<UserMessageModel>;
     if (s._id) {
       c._id = s._id;
@@ -104,8 +116,11 @@ export class UserMessageService extends BaseCrudServiceGenerate<
     if (s.status) {
       c.status = s.status;
     }
-    if (s.creationDate) {
-      c.creationDate = s.creationDate;
+    if (s.creationDateGte) {
+      c.creationDate = { $gte: s.creationDateGte };
+    }
+    if (s.creationDateLte) {
+      c.creationDate = { $lte: s.creationDateLte };
     }
     return c;
   }

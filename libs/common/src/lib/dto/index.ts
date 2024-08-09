@@ -7,3 +7,4 @@
 // export * from './global-variable-rename';
 // export * from './global-variable-search.dto';
 export * from './user-message.dto';
+export * from './user-message.search';
