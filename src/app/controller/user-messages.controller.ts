@@ -35,6 +35,6 @@ export class UserMessageController extends BaseCrudControllerGenerator<
   async insertQuestionMedia() {
     const name = new Date().toISOString(),
       category = 'USER_MESSAGE';
-    return { category, name };
+    return { category, name, volatile: true, durationMiliseconds: 15552000000 };
   }
 }
