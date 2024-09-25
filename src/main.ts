@@ -11,7 +11,7 @@ import { getMicroserviceConnection } from '@ubs-platform/nest-microservice-setup
 import { Transport } from '@nestjs/microservices';
 export const INTERNAL_COMMUNICATION = {
   port: parseInt(process.env['U_FEEDBACK_MONA_INTERNAL_COM_PORT'] || '0'),
-  host: process.env['U_FEEDBACK_MONA_INTERNAL_COM_PORT'],
+  host: process.env['U_FEEDBACK_MONA_INTERNAL_COM_HOST'],
 };
 
 async function bootstrap() {
