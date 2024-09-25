@@ -27,8 +27,8 @@ export class UserMessageController extends BaseCrudControllerGenerator<
 
     this.kafkaClient.emit('register-category', {
       category: 'USER_MESSAGE',
-      serviceTcpHost: process.env['U_USERS_MONA_INTERNAL_COM_HOST'],
-      serviceTcpPort: process.env['U_USERS_MONA_INTERNAL_COM_PORT'],
+      serviceTcpHost: process.env['U_FEEDBACK_MONA_INTERNAL_COM_HOST'],
+      serviceTcpPort: process.env['U_FEEDBACK_MONA_INTERNAL_COM_PORT'],
     });
   }
 
