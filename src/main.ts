@@ -22,7 +22,7 @@ async function bootstrap() {
     transport: Transport.TCP,
     options: {
       port: INTERNAL_COMMUNICATION.port,
-      host: INTERNAL_COMMUNICATION.host,
+      host: '0.0.0.0',
     },
   });
   app.setGlobalPrefix(globalPrefix);
