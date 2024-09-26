@@ -8,11 +8,16 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import { getMicroserviceConnection } from '@ubs-platform/nest-microservice-setup-util';
+import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   app.connectMicroservice(getMicroserviceConnection(''));
+  app.connectMicroservice({
+    transport: Transport.TCP,
+    options: { port: '0.0.0.0' },
+  });
 
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3169;
